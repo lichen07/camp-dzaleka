@@ -590,23 +590,13 @@ function getIcon(feature) {
     }
   }
 
-  // Charger les données GeoJSON et ajouter les markers à la carte
-  L.geoJSON(geojsonData, {
-    pointToLayer: function(feature, latlng) {
-      return L.marker(latlng);  // Crée un marker à l'emplacement des coordonnées
-    },
-    onEachFeature: onEachFeature  // Appliquer la popup pour chaque entité
-  }).addTo(map);
-</script>
 
-  
 /* AJOUT DES INFRASTRUCTURES SUR LA CARTE ET POP UP */
 L.geoJSON(geojsonData, {
   pointToLayer: function (feature, latlng) {
     return L.marker(latlng, { icon: getIcon(feature) });
   },
   onEachFeature: function (feature, layer) {
-    // Create popup content
     var popupContent = `
       <b>Nom:</b> ${feature.properties.Nom} <br>
       <b>Type:</b> ${feature.properties.Type} <br>
