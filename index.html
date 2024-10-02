@@ -537,6 +537,37 @@
         }
       ]
     };
+
+    /* Function to choose the icon based on the 'Classe' attribute */
+    function getIcon(feature) {
+      var classe = feature.properties.Classe;
+      var iconUrl = '';
+
+      // Define custom icons based on 'Classe'
+      if (classe === "Établissement d'enseignement") {
+        iconUrl = 'https://github.com/lichen07/camp-dzaleka/blob/main/graduation-hat.png'; // Remplacez par votre fichier PNG ou SVG
+      } else if (classe === "Centre de distribution alimentaire") {
+        iconUrl = 'path/to/food-distribution-icon.png';
+      } else if (classe === "OBNL") {
+        iconUrl = 'path/to/obnl-icon.png';
+      }
+      // Ajouter d'autres conditions pour d'autres classes si nécessaire
+
+      return L.icon({
+        iconUrl: iconUrl,
+        iconSize: [32, 32], // Taille de l'icône
+        iconAnchor: [16, 32], // Point d'ancrage de l'icône
+        popupAnchor: [0, -32] // Ancrage pour les popups
+      });
+    }
+
+    /* Add GeoJSON to the map with custom styling */
+    L.geoJSON(geojsonData, {
+      pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, { icon: getIcon(feature) });
+      }
+    }).addTo(map);
+    
     
     /* Add markers with popups */
     L.geoJSON(geojsonData, {
