@@ -570,21 +570,22 @@ var basemaps = {
       ]
     };
 
-    // Ajouter les marqueurs avec étiquettes
-    
-  var labelsLayer = L.layerGroup();
+    // Groupe de couches pour les étiquettes
+    var labelLayer = L.layerGroup();
+
+    // Ajout des noms dans l'overlay "Étiquettes" sans les marqueurs
     geojsonData.features.forEach(function(feature) {
-      var marker = L.marker([feature.geometry.coordinates[1], feature.geometry.coordinates[0]]);
-      marker.bindTooltip(feature.properties.Nom, { className: "label-tooltip" });
-      labelsLayer.addLayer(marker);
+      var coord = feature.geometry.coordinates;
+      var name = feature.properties.Nom;
+      
+      // Ajouter un tooltip au lieu de marker
+      var label = L.marker([coord[1], coord[0]], {icon: L.divIcon({className: 'leaflet-div-icon', iconSize: [0, 0]})})
+        .bindTooltip(name, {permanent: true, className: 'label-tooltip', offset: [0, 0]})
+        .addTo(labelLayer);
     });
 
-    // Ajouter la couche d'étiquettes à la carte avec une option pour l'afficher/masquer
-    var overlays = {
-      "Étiquettes": labelsLayer
-    };
-
- var layerControl = L.control.layers(basemaps, overlays).addTo(map); 
+    // Ajouter l'overlay d'étiquettes
+    labelLayer.addTo(map);
 
 /* SYMBOLOGIE EN FONCTION DE LA CLASSE */
 function getIcon(feature) {
