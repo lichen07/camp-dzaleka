@@ -22,12 +22,12 @@
 
   /* Set up the initial map center and zoom level */
   var map = L.map('map', {
-    center: [-13.663053, 33.870444], // EDIT coordinates to re-center map
-    zoom: 16,  // EDIT from 1 (zoomed out) to 18 (zoomed in)
+    center: [-13.663053, 33.870444], // Centering on Dzaleka camp
+    zoom: 16,  // Zoom level
     scrollWheelZoom: false
   });
 
-  /* display basemap tiles -- see others at https://leaflet-extras.github.io/leaflet-providers/preview/ */
+  /* Display basemap tiles */
   L.tileLayer(
     'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; <a href="https://osm.org/copyright">\
@@ -35,10 +35,27 @@
         <a href="https://carto.com/attribution">CARTO</a>'
   }).addTo(map);
 
-  /* Display a point marker with pop-up text */
-  L.marker([41.77, -72.69]).addTo(map) // EDIT marker coordinates
-  .bindPopup("Insert pop-up text here"); // EDIT pop-up text message
+  /* Load and display the GeoJSON layer */
+  var geojsonUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/infrastructures-dzaleka.json';
+
+  // Fetch the GeoJSON data and add it to the map
+  fetch(geojsonUrl)
+    .then(response => response.json())
+    .then(data => {
+      L.geoJSON(data, {
+        onEachFeature: function (feature, layer) {
+          // Optionally bind popup to display the name or other properties
+          if (feature.properties && feature.properties.name) {
+            layer.bindPopup(feature.properties.name);
+          }
+        }
+      }).addTo(map);
+    })
+    .catch(error => {
+      console.error('Error loading the GeoJSON data:', error);
+    });
 
   </script>
 </body>
 </html>
+
