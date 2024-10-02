@@ -60,7 +60,35 @@
     };  
     
     var layerControl = L.control.layers(basemaps).addTo(map);  
-  
+
+    
+      /* Définir la couleur du label-tooltip selon le fond de carte */
+    function updateTooltipStyle(layerName) {
+      var tooltips = document.querySelectorAll('.label-tooltip');
+      if (layerName === 'Voyager') {
+        tooltips.forEach(function(tooltip) {
+          tooltip.style.color = 'black';  // Noir pour voyager
+        });
+      } else if (layerName === 'Google Satellite') {
+        tooltips.forEach(function(tooltip) {
+          tooltip.style.color = 'white';  // Blanc pour Google Satellite
+        });
+      }
+    }
+
+    // Appliquer la couleur initiale du fond de carte
+    updateTooltipStyle('Voyager');
+
+    /* Lorsque le fond de carte change, mettre à jour la couleur du tooltip */
+    map.on('layeradd', function(e) {
+      if (e.layer === voyagerlayer) {
+        updateTooltipStyle('Voyager');
+      } else if (e.layer === googlesatellitelayer) {
+        updateTooltipStyle('Google Satellite');
+      }
+    });
+
+    
     /* AJOUT DES INFRASTRUCTURES CLÉS DU CAMP */
     var geojsonData = {
       "type": "FeatureCollection",
