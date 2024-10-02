@@ -35,6 +35,12 @@
         attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://carto.com/attribution">CARTO</a>'
     }).addTo(map);
 
+    L.tileLayer(
+      'https://{s}.googleapis.com/maps/vt?lyrs=s&x={x}&y={y}&z={z}&scale=2', {
+        attribution: '&copy; <a href="https://www.google.com/maps">Google Maps</a>',
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    }).addTo(map);
+  
     /* AJOUT DES INFRASTRUCTURES CLÉS DU CAMP */
     var geojsonData = {
       "type": "FeatureCollection",
