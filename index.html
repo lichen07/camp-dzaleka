@@ -13,7 +13,16 @@
   <style>
     body { margin:0; padding:0; }
     #map { position: absolute; top:0; bottom:0; right:0; left:0; }
+        .label-tooltip {
+      background-color: transparent;
+      border: none;
+      color: black;
+      font-weight: bold;
+      font-size: 12px;
+      padding: 0;
+    }
   </style>
+  <head>
 </head>
 <body>
 
@@ -586,9 +595,7 @@ function getIcon(feature) {
 // AJOUTER LES ÉTIQUETTES POUR CHAQUE ENTITÉ
 function onEachFeature(feature, layer) {
   if (feature.properties && feature.properties.Nom) {
-    // Ajouter un popup
     layer.bindPopup(feature.properties.Nom);
-    // Ajouter une étiquette permanente
     layer.bindTooltip(feature.properties.Nom, { permanent: true, direction: "center", className: "label-tooltip" });
   }
 }
