@@ -58,6 +58,8 @@
       "Google Satellite": googlesatellitelayer,
       "Voyager": voyagerlayer
     };  
+    
+    var layerControl = L.control.layers(basemaps).addTo(map);  
   
     /* AJOUT DES INFRASTRUCTURES CLÉS DU CAMP */
     var geojsonData = {
