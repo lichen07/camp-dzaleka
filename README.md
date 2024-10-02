@@ -1,8 +1,5 @@
-# leaflet-map-simple
-A simple Leaflet map template for new users to fork their own copy, edit, and host on GitHub Pages
-
-## Link to live map (replace with link to your site)
+#Lien vers la carte web interactive
 https://lichen07.github.io/camp-dzaleka/
 
-## Create your own
-See step-by-step tutorial at https://HandsOnDataViz.org, an open-access book by Jack Dougherty and Ilya Ilyankou
+#Source des icônes utilisées
+Graduation hat: https://www.flaticon.com/free-icon/graduation-hat_999735?term=school&page=1&position=5&origin=search&related_id=999735 
