@@ -570,27 +570,6 @@ var basemaps = {
       ]
     };
 
-    // CRÉATION DU GROUPE POUR LES ÉTIQUETTES
-    var labelLayer = L.layerGroup();
-
-    geojsonData.features.forEach(function(feature) {
-      var latlng = L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
-
-      // Création de l'étiquette avec le nom de l'entité
-      var label = L.marker(latlng, {
-        icon: L.divIcon({
-          className: 'label-tooltip',
-          html: feature.properties.Nom
-        })
-      }).addTo(labelLayer);
-    });
-
-    // AJOUT DE L'OVERLAY DES ÉTIQUETTES DANS LE CONTRÔLE DE COUCHES
-    var overlays = {
-      "Étiquettes": labelLayer
-    };
-
-    layerControl.addOverlay(labelLayer, "Étiquettes");
 
 /* SYMBOLOGIE EN FONCTION DE LA CLASSE */
 function getIcon(feature) {
