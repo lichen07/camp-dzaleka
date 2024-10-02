@@ -11,51 +11,53 @@
 
   <!-- Position the map and title with Cascading Style Sheet (CSS) -->
   <style>
-  body { margin:0; padding:0; }
-  #map { position: absolute; top:0; bottom:0; right:0; left:0; }
+    body { margin:0; padding:0; }
+    #map { position: absolute; top:0; bottom:0; right:0; left:0; }
   </style>
 </head>
 <body>
 
+  <!-- Create the map container -->
+  <div id="map"></div>
+
   <!-- Create the interactive map content with JavaScript (.js) -->
   <script>
-
-  /* Set up the initial map center and zoom level */
-  var map = L.map('map', {
-    center: [-13.663053, 33.870444], // Centering on Dzaleka camp
-    zoom: 16,  // Zoom level
-    scrollWheelZoom: false
-  });
-
-  /* Display basemap tiles */
-  L.tileLayer(
-    'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://osm.org/copyright">\
-        OpenStreetMap</a> contributors, &copy;\
-        <a href="https://carto.com/attribution">CARTO</a>'
-  }).addTo(map);
-
-  /* Load and display the GeoJSON layer */
-  var geojsonUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/infrastructures-dzaleka.json';
-
-  // Fetch the GeoJSON data and add it to the map
-  fetch(geojsonUrl)
-    .then(response => response.json())
-    .then(data => {
-      L.geoJSON(data, {
-        onEachFeature: function (feature, layer) {
-          // Optionally bind popup to display the name or other properties
-          if (feature.properties && feature.properties.name) {
-            layer.bindPopup(feature.properties.name);
-          }
-        }
-      }).addTo(map);
-    })
-    .catch(error => {
-      console.error('Error loading the GeoJSON data:', error);
+    /* Set up the initial map center and zoom level */
+    var map = L.map('map', {
+      center: [-13.663053, 33.870444], // Centering on Dzaleka camp
+      zoom: 16,  // Zoom level
+      scrollWheelZoom: false
     });
 
+    /* Display basemap tiles */
+    L.tileLayer(
+      'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://osm.org/copyright">\
+          OpenStreetMap</a> contributors, &copy;\
+          <a href="https://carto.com/attribution">CARTO</a>'
+    }).addTo(map);
+
+    /* Load and display the GeoJSON layer */
+    var geojsonUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/infrastructures-dzaleka.json';
+
+    // Fetch the GeoJSON data and add it to the map
+    fetch(geojsonUrl)
+      .then(response => response.json())
+      .then(data => {
+        L.geoJSON(data, {
+          onEachFeature: function (feature, layer) {
+            // Optionally bind popup to display the name or other properties
+            if (feature.properties && feature.properties.name) {
+              layer.bindPopup(feature.properties.name);
+            }
+          }
+        }).addTo(map);
+      })
+      .catch(error => {
+        console.error('Error loading the GeoJSON data:', error);
+      });
   </script>
 </body>
 </html>
+
 
