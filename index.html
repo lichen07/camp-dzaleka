@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="utf-8">
 
-  <!-- Load Leaflet code library: see https://leafletjs.com/download.html -->
+  <!BIBLIOTHÈQUE LEAFLET: https://leafletjs.com/download.html -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css" integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" crossorigin="" />
   <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js" integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script>
 
-  <!-- Position the map and title with Cascading Style Sheet (CSS) -->
+  <!-- POSITIONNEMENT DE LA CARTE (CSS) -->
   <style>
     body { margin:0; padding:0; }
     #map { position: absolute; top:0; bottom:0; right:0; left:0; }
@@ -17,25 +17,25 @@
 </head>
 <body>
 
-  <!-- Create the map container -->
+  <!-- MAP CONTAINER -->
   <div id="map"></div>
 
-  <!-- Create the interactive map content with JavaScript (.js) -->
+  <!-- CENTRE DE LA CARTE ET ZOOM (.js) -->
   <script>
     /* Set up the initial map center and zoom level */
     var map = L.map('map', {
-      center: [-13.663053, 33.870444], // Centering on Dzaleka camp
+      center: [-13.663053, 33.870444], 
       zoom: 16,  // Zoom level
       scrollWheelZoom: false
     });
 
-    /* Display basemap tiles */
+    /* FOND DE CARTE */
     L.tileLayer(
       'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://carto.com/attribution">CARTO</a>'
     }).addTo(map);
 
-    /* Define GeoJSON directly in the code */
+    /* AJOUT DES INFRASTRUCTURES CLÉS DU CAMP */
     var geojsonData = {
       "type": "FeatureCollection",
       "features": [
@@ -538,7 +538,7 @@
       ]
     };
 
-/* Function to choose the icon based on the 'Classe' attribute */
+/* SYMBOLOGIE EN FONCTION DE LA CLASSE */
 function getIcon(feature) {
   var classe = feature.properties.Classe;
   var iconUrl = '';
@@ -562,16 +562,15 @@ function getIcon(feature) {
 
   return L.icon({
     iconUrl: iconUrl,
-    iconSize: [32, 32], // Taille de l'icône
-    iconAnchor: [16, 32], // Point d'ancrage de l'icône
-    popupAnchor: [0, -32] // Ancrage pour les popups
+    iconSize: [20, 20], 
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
   });
 }
 
-/* Add GeoJSON to the map with custom styling and popups */
+/* AJOUT DES INFRASTRUCTURES SUR LA CARTE ET POP UP */
 L.geoJSON(geojsonData, {
   pointToLayer: function (feature, latlng) {
-    // Use the custom icon for the marker
     return L.marker(latlng, { icon: getIcon(feature) });
   },
   onEachFeature: function (feature, layer) {
@@ -583,7 +582,6 @@ L.geoJSON(geojsonData, {
       <b>PlusCode:</b> ${feature.properties.PlusCode} <br>
       <b>Source:</b> ${feature.properties.Source} <br>
     `;
-    // Bind the popup to the marker
     layer.bindPopup(popupContent);
   }
 }).addTo(map);
