@@ -8,3 +8,4 @@ humanitarian.png: https://www.flaticon.com/free-icon/humanitarian_4277003?term=h
 hospital.png: https://www.flaticon.com/free-icon/hospital_8145721?term=hospital&page=1&position=33&origin=search&related_id=8145721
 rec.png: https://www.flaticon.com/free-icon/rec_10024160?term=dot&page=1&position=71&origin=search&related_id=10024160
 gas-pump: https://www.flaticon.com/free-icon/gas-pump_891035?term=gas+station&page=1&position=3&origin=search&related_id=891035
+police-station.png: https://www.flaticon.com/free-icon/police-station_2088117?term=police+station&page=1&position=10&origin=search&related_id=2088117
