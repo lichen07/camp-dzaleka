@@ -570,22 +570,27 @@ var basemaps = {
       ]
     };
 
-    // Groupe de couches pour les étiquettes
+    // CRÉATION DU GROUPE POUR LES ÉTIQUETTES
     var labelLayer = L.layerGroup();
 
-    // Ajout des noms dans l'overlay "Étiquettes" sans les marqueurs
     geojsonData.features.forEach(function(feature) {
-      var coord = feature.geometry.coordinates;
-      var name = feature.properties.Nom;
-      
-      // Ajouter un tooltip au lieu de marker
-      var label = L.marker([coord[1], coord[0]], {icon: L.divIcon({className: 'leaflet-div-icon', iconSize: [0, 0]})})
-        .bindTooltip(name, {permanent: true, className: 'label-tooltip', offset: [0, 0]})
-        .addTo(labelLayer);
+      var latlng = L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
+
+      // Création de l'étiquette avec le nom de l'entité
+      var label = L.marker(latlng, {
+        icon: L.divIcon({
+          className: 'label-tooltip',
+          html: feature.properties.Nom
+        })
+      }).addTo(labelLayer);
     });
 
-    // Ajouter l'overlay d'étiquettes
-    labelLayer.addTo(map);
+    // AJOUT DE L'OVERLAY DES ÉTIQUETTES DANS LE CONTRÔLE DE COUCHES
+    var overlays = {
+      "Étiquettes": labelLayer
+    };
+
+    layerControl.addOverlay(labelLayer, "Étiquettes");
 
 /* SYMBOLOGIE EN FONCTION DE LA CLASSE */
 function getIcon(feature) {
