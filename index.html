@@ -65,23 +65,7 @@ var basemaps = {
   "Google Satellite": googlesatellitelayer
 };
 
-    
-
-    // Ajouter les marqueurs avec étiquettes
-    
-  var labelsLayer = L.layerGroup();
-    geojsonData.features.forEach(function(feature) {
-      var marker = L.marker([feature.geometry.coordinates[1], feature.geometry.coordinates[0]]);
-      marker.bindTooltip(feature.properties.Nom, { className: "label-tooltip" });
-      labelsLayer.addLayer(marker);
-    });
-
-    // Ajouter la couche d'étiquettes à la carte avec une option pour l'afficher/masquer
-    var overlays = {
-      "Étiquettes": labelsLayer
-    };
-
-    L.control.layers(basemaps, overlays).addTo(map);
+ var layerControl = L.control.layers(basemaps).addTo(map);   
   
     /* AJOUT DES INFRASTRUCTURES CLÉS DU CAMP */
     var geojsonData = {
@@ -585,6 +569,22 @@ var basemaps = {
         }
       ]
     };
+
+    // Ajouter les marqueurs avec étiquettes
+    
+  var labelsLayer = L.layerGroup();
+    geojsonData.features.forEach(function(feature) {
+      var marker = L.marker([feature.geometry.coordinates[1], feature.geometry.coordinates[0]]);
+      marker.bindTooltip(feature.properties.Nom, { className: "label-tooltip" });
+      labelsLayer.addLayer(marker);
+    });
+
+    // Ajouter la couche d'étiquettes à la carte avec une option pour l'afficher/masquer
+    var overlays = {
+      "Étiquettes": labelsLayer
+    };
+
+ var layerControl = L.control.layers(basemaps, overlays).addTo(map); 
 
 /* SYMBOLOGIE EN FONCTION DE LA CLASSE */
 function getIcon(feature) {
