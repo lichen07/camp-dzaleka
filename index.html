@@ -538,60 +538,56 @@
       ]
     };
 
-    /* Function to choose the icon based on the 'Classe' attribute */
-    function getIcon(feature) {
-      var classe = feature.properties.Classe;
-      var iconUrl = '';
+/* Function to choose the icon based on the 'Classe' attribute */
+function getIcon(feature) {
+  var classe = feature.properties.Classe;
+  var iconUrl = '';
 
-      // Define custom icons based on 'Classe'
-      if (classe === "Établissement d'enseignement") {
-        iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/graduation-hat.png'; // Remplacez par votre fichier PNG ou SVG
-      } else if (classe === "Centre de distribution alimentaire") {
-        iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/restaurant.png';
-      } else if (classe === "OBNL") {
-        iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/humanitarian.png';
-      } else if (classe == "Établissement de santé") {
-        iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/hospital.png';
-      } else if (classe == "LCC Dzaleka") {
-        iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/rec.png';
-      } else if (classe == "Station-service") {
-        iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/gas-pump.png';
-      } else if (classe == "Station de police") {
-        iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/police-station.png';
-      }
-        // Ajouter d'autres conditions pour d'autres classes si nécessaire
+  // Define custom icons based on 'Classe'
+  if (classe === "Établissement d'enseignement") {
+    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/graduation-hat.png';
+  } else if (classe === "Centre de distribution alimentaire") {
+    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/restaurant.png';
+  } else if (classe === "OBNL") {
+    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/humanitarian.png';
+  } else if (classe == "Établissement de santé") {
+    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/hospital.png';
+  } else if (classe == "LCC Dzaleka") {
+    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/rec.png';
+  } else if (classe == "Station-service") {
+    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/gas-pump.png';
+  } else if (classe == "Station de police") {
+    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/police-station.png';
+  }
 
-      return L.icon({
-        iconUrl: iconUrl,
-        iconSize: [32, 32], // Taille de l'icône
-        iconAnchor: [16, 32], // Point d'ancrage de l'icône
-        popupAnchor: [0, -32] // Ancrage pour les popups
-      });
-    }
+  return L.icon({
+    iconUrl: iconUrl,
+    iconSize: [32, 32], // Taille de l'icône
+    iconAnchor: [16, 32], // Point d'ancrage de l'icône
+    popupAnchor: [0, -32] // Ancrage pour les popups
+  });
+}
 
-/* Add GeoJSON to the map with custom styling */
+/* Add GeoJSON to the map with custom styling and popups */
 L.geoJSON(geojsonData, {
   pointToLayer: function (feature, latlng) {
-    // Utilisez la fonction getIcon pour ajouter l'icône personnalisée
+    // Use the custom icon for the marker
     return L.marker(latlng, { icon: getIcon(feature) });
+  },
+  onEachFeature: function (feature, layer) {
+    // Create popup content
+    var popupContent = `
+      <b>Nom:</b> ${feature.properties.Nom} <br>
+      <b>Type:</b> ${feature.properties.Type} <br>
+      <b>Adresse:</b> ${feature.properties.Adresse} <br>
+      <b>PlusCode:</b> ${feature.properties.PlusCode} <br>
+      <b>Source:</b> ${feature.properties.Source} <br>
+    `;
+    // Bind the popup to the marker
+    layer.bindPopup(popupContent);
   }
-}).addTo(map);  
-    
-    /* Add markers with popups */
-    L.geoJSON(geojsonData, {
-      onEachFeature: function (feature, layer) {
-        // Create popup content
-        var popupContent = `
-          <b>Nom:</b> ${feature.properties.Nom} <br>
-          <b>Type:</b> ${feature.properties.Type} <br>
-          <b>Adresse:</b> ${feature.properties.Adresse} <br>
-          <b>PlusCode:</b> ${feature.properties.PlusCode} <br>
-          <b>Source:</b> ${feature.properties.Source} <br>
-        `;
-        // Bind the popup to the marker
-        layer.bindPopup(popupContent);
-      }
-    }).addTo(map);
+}).addTo(map);
+
   </script>
 
 </body>
