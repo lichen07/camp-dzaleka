@@ -583,6 +583,23 @@ function getIcon(feature) {
   });
 }
 
+  // AJOUTER LES ÉTIQUETTES POUR CHAQUE ENTITÉ
+  function onEachFeature(feature, layer) {
+    if (feature.properties && feature.properties.Nom) {
+      layer.bindPopup(feature.properties.Nom);
+    }
+  }
+
+  // Charger les données GeoJSON et ajouter les markers à la carte
+  L.geoJSON(geojsonData, {
+    pointToLayer: function(feature, latlng) {
+      return L.marker(latlng);  // Crée un marker à l'emplacement des coordonnées
+    },
+    onEachFeature: onEachFeature  // Appliquer la popup pour chaque entité
+  }).addTo(map);
+</script>
+
+  
 /* AJOUT DES INFRASTRUCTURES SUR LA CARTE ET POP UP */
 L.geoJSON(geojsonData, {
   pointToLayer: function (feature, latlng) {
