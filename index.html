@@ -583,13 +583,15 @@ function getIcon(feature) {
   });
 }
 
-  // AJOUTER LES ÉTIQUETTES POUR CHAQUE ENTITÉ
-  function onEachFeature(feature, layer) {
-    if (feature.properties && feature.properties.Nom) {
-      layer.bindPopup(feature.properties.Nom);
-    }
+// AJOUTER LES ÉTIQUETTES POUR CHAQUE ENTITÉ
+function onEachFeature(feature, layer) {
+  if (feature.properties && feature.properties.Nom) {
+    // Ajouter un popup
+    layer.bindPopup(feature.properties.Nom);
+    // Ajouter une étiquette permanente
+    layer.bindTooltip(feature.properties.Nom, { permanent: true, direction: "center", className: "label-tooltip" });
   }
-
+}
 
 /* AJOUT DES INFRASTRUCTURES SUR LA CARTE ET POP UP */
 L.geoJSON(geojsonData, {
@@ -605,8 +607,14 @@ L.geoJSON(geojsonData, {
       <b>Source:</b> ${feature.properties.Source} <br>
     `;
     layer.bindPopup(popupContent);
+    
+    // Ajouter également l'étiquette permanente pour chaque entité
+    if (feature.properties && feature.properties.Nom) {
+      layer.bindTooltip(feature.properties.Nom, { permanent: true, direction: "center", className: "label-tooltip" });
+    }
   }
 }).addTo(map);
+
 
   </script>
 
