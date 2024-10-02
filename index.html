@@ -5,62 +5,83 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="utf-8">
 
-  <!BIBLIOTHÈQUE LEAFLET: https://leafletjs.com/download.html -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css" integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" crossorigin="" />
-  <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js" integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script>
+  <!-- BIBLIOTHÈQUE LEAFLET -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"></script>
 
-  <!-- POSITIONNEMENT DE LA CARTE (CSS) -->
+  <!-- STYLE POUR LES ÉTIQUETTES ET LE BLOC DE TEXTE -->
   <style>
-    body { margin:0; padding:0; }
-    #map { position: absolute; top:0; bottom:0; right:0; left:0; }
-        .label-tooltip {
-      background-color: transparent;
-      border: none;
-      font-family: "Times New Roman", Times, serif;
+    body { margin: 0; padding: 0; }
+    #map { position: absolute; top: 0; bottom: 0; right: 0; left: 0; }
+    
+    /* Style pour le bloc de texte à droite */
+    #info-block {
+      position: absolute;
+      top: 10%;
+      right: 0;
+      width: 250px;
+      background-color: rgba(0, 0, 0, 0.5);  /* Transparence */
       color: white;
-      font-weight: bold;
-      font-size: 12px;
-      padding: 0;
-      text-shadow: none;
-      box-shadow: none;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      z-index: 1000;
+      overflow-y: auto;
+      max-height: 80%;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Style pour les éléments de la liste */
+    .infrastructure-name {
+      margin: 5px 0;
+      padding: 5px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .infrastructure-name:last-child {
+      border-bottom: none;
     }
   </style>
-  <head>
 </head>
 <body>
 
-  <!-- MAP CONTAINER -->
+  <!-- CONTAINER DE LA CARTE -->
   <div id="map"></div>
 
-  <!-- CENTRE DE LA CARTE ET ZOOM (.js) -->
+  <!-- BLOC D'INFORMATION POUR LES INFRASTRUCTURES -->
+  <div id="info-block">
+    <h3>Infrastructures</h3>
+    <div id="infrastructure-list"></div>
+  </div>
+
   <script>
-    /* Set up the initial map center and zoom level */
+    // CENTRE ET ZOOM DE LA CARTE
     var map = L.map('map', {
-      center: [-13.663053, 33.870444], 
+      center: [-13.663053, 33.870444],
       zoom: 17,
       scrollWheelZoom: false
     });
 
-/* FOND DE CARTE */
-var voyagerlayer = L.tileLayer(
-  'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://carto.com/attribution">CARTO</a>, &copy;<a href="https://www.flaticon.com/">Flaticon</a>'
-}).addTo(map);
+    // FOND DE CARTE
+    var voyagerlayer = L.tileLayer(
+      'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://carto.com/attribution">CARTO</a>'
+    }).addTo(map);
 
-var googlesatellitelayer = L.tileLayer(
-  'https://{s}.googleapis.com/maps/vt?lyrs=s&x={x}&y={y}&z={z}&scale=2', {
-    attribution: '&copy; <a href="https://www.google.com/maps">Google Maps</a>, &copy;<a href="https://www.flaticon.com/">Flaticon</a>',
-    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-});
+    var googlesatellitelayer = L.tileLayer(
+      'https://{s}.googleapis.com/maps/vt?lyrs=s&x={x}&y={y}&z={z}&scale=2', {
+        attribution: '&copy; <a href="https://www.google.com/maps">Google Maps</a>',
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    });
 
+    var basemaps = {
+      "Voyager": voyagerlayer,
+      "Google Satellite": googlesatellitelayer
+    };
 
-/* CHOIX DU FOND DE CARTE */ 
-var basemaps = {
-  "Voyager": voyagerlayer,
-  "Google Satellite": googlesatellitelayer
-};
-
- var layerControl = L.control.layers(basemaps).addTo(map);   
+    var layerControl = L.control.layers(basemaps).addTo(map);
+  
   
     /* AJOUT DES INFRASTRUCTURES CLÉS DU CAMP */
     var geojsonData = {
@@ -566,67 +587,46 @@ var basemaps = {
     };
 
 
-/* SYMBOLOGIE EN FONCTION DE LA CLASSE */
-function getIcon(feature) {
-  var classe = feature.properties.Classe;
-  var iconUrl = '';
+    // SYMBOLOGIE EN FONCTION DE LA CLASSE
+    function getIcon(feature) {
+      var classe = feature.properties.Type;
+      var iconUrl = '';
 
-  // Define custom icons based on 'Classe'
-  if (classe === "Établissement d'enseignement") {
-    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/icon1.png';
-  } else if (classe === "Centre de distribution alimentaire") {
-    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/restaurant.png';
-  } else if (classe === "OBNL") {
-    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/humanitarian-aid.png';
-  } else if (classe == "Établissement de santé") {
-    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/hospital.png';
-  } else if (classe == "LCC Dzaleka") {
-    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/rec.png';
-  } else if (classe == "Station-service") {
-    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/gas-pump.png';
-  } else if (classe == "Station de police") {
-    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/police-station.png';
-  }
+      if (classe === "Établissement d'enseignement") {
+        iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/icon1.png';
+      } else if (classe === "Restaurant") {
+        iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/restaurant.png';
+      }
 
-  return L.icon({
-    iconUrl: iconUrl,
-    iconSize: [30, 30], 
-    iconAnchor: [16, 32],
-    popupAnchor: [0, -32]
-  });
-}
-
-// AJOUTER LES ÉTIQUETTES POUR CHAQUE ENTITÉ
-function onEachFeature(feature, layer) {
-  if (feature.properties && feature.properties.Nom) {
-    layer.bindPopup(feature.properties.Nom);
-    layer.bindTooltip(feature.properties.Nom, { permanent: true, direction: "center", className: "label-tooltip" });
-  }
-}
-
-/* AJOUT DES INFRASTRUCTURES SUR LA CARTE ET POP UP */
-L.geoJSON(geojsonData, {
-  pointToLayer: function (feature, latlng) {
-    return L.marker(latlng, { icon: getIcon(feature) });
-  },
-  onEachFeature: function (feature, layer) {
-    var popupContent = `
-      <b>Nom:</b> ${feature.properties.Nom} <br>
-      <b>Type:</b> ${feature.properties.Type} <br>
-      <b>Adresse:</b> ${feature.properties.Adresse} <br>
-      <b>PlusCode:</b> ${feature.properties.PlusCode} <br>
-      <b>Source:</b> ${feature.properties.Source} <br>
-    `;
-    layer.bindPopup(popupContent);
-    
-    // Ajouter également l'étiquette permanente pour chaque entité
-    if (feature.properties && feature.properties.Nom) {
-      layer.bindTooltip(feature.properties.Nom, { permanent: true, direction: "center", className: "label-tooltip" });
+      return L.icon({
+        iconUrl: iconUrl,
+        iconSize: [30, 30],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+      });
     }
-  }
-}).addTo(map);
 
+    // AJOUTER LES INFRASTRUCTURES SUR LA CARTE
+    L.geoJSON(geojsonData, {
+      pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, { icon: getIcon(feature) });
+      },
+      onEachFeature: function (feature, layer) {
+        var popupContent = `
+          <b>Nom:</b> ${feature.properties.Nom} <br>
+          <b>Type:</b> ${feature.properties.Type} <br>
+          <b>Adresse:</b> ${feature.properties.Adresse} <br>
+        `;
+        layer.bindPopup(popupContent);
 
+        // Ajout des noms d'infrastructures à la liste dans le bloc
+        var infrastructureList = document.getElementById('infrastructure-list');
+        var infraName = document.createElement('div');
+        infraName.className = 'infrastructure-name';
+        infraName.innerText = feature.properties.Nom;
+        infrastructureList.appendChild(infraName);
+      }
+    }).addTo(map);
   </script>
 
 </body>
