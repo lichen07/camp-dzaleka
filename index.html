@@ -32,9 +32,7 @@
     /* Display basemap tiles */
     L.tileLayer(
       'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://osm.org/copyright">\
-          OpenStreetMap</a> contributors, &copy;\
-          <a href="https://carto.com/attribution">CARTO</a>'
+        attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://carto.com/attribution">CARTO</a>'
     }).addTo(map);
 
     /* Define GeoJSON directly in the code */
@@ -63,7 +61,7 @@
             "FID": 1,
             "Nom": "Zawadie Solutions",
             "Type": "Organisme sans but lucratif",
-            "Adresse": " ",
+            "Adresse": "",
             "PlusCode": "8VP7+XR2, Dowa, Malawi",
             "Source": "Google Maps",
             "Classe": "OBNL"
@@ -95,7 +93,7 @@
             "FID": 3,
             "Nom": "Youth Congress for Development and Socio-Progress (YOCODESOP)",
             "Type": "Association ou organisation",
-            "Adresse": " ",
+            "Adresse": "",
             "PlusCode": "8VP7+XW, Dowa, Malawi",
             "Source": "Google Maps",
             "Classe": "OBNL"
@@ -111,7 +109,7 @@
             "FID": 4,
             "Nom": "Vijana Africa",
             "Type": "Organisme sans but lucratif",
-            "Adresse": " ",
+            "Adresse": "",
             "PlusCode": "8VP8+HW, Dowa, Malawi",
             "Source": "Google Maps",
             "Classe": "OBNL"
@@ -127,7 +125,7 @@
             "FID": 5,
             "Nom": "Dzaleka Police station",
             "Type": "Bureau gouvernemental",
-            "Adresse": " ",
+            "Adresse": "",
             "PlusCode": "8VP7+X9, Dowa, Malawi",
             "Source": "Google Maps",
             "Classe": "Station de police"
@@ -143,7 +141,7 @@
             "FID": 6,
             "Nom": "LCC Dzaleka",
             "Type": "Siège social",
-            "Adresse": " ",
+            "Adresse": "",
             "PlusCode": "8VP7+VQ, Dowa, Malawi",
             "Source": "Google Maps",
             "Classe": "LCC Dzaleka"
@@ -159,7 +157,7 @@
             "FID": 7,
             "Nom": "BloomBox",
             "Type": "Centre d'information",
-            "Adresse": " ",
+            "Adresse": "",
             "PlusCode": "8VP7+QJ, Dowa, Malawi",
             "Source": "Google Maps",
             "Classe": "Établissement d'enseignement"
@@ -175,7 +173,7 @@
             "FID": 8,
             "Nom": "JWL Zaidi Center",
             "Type": "Université",
-            "Adresse": " ",
+            "Adresse": "",
             "PlusCode": "8VP8+9P, Dowa, Malawi",
             "Source": "Google Maps",
             "Classe": "Établissement d'enseignement"
@@ -191,7 +189,7 @@
             "FID": 9,
             "Nom": "Dzaleka Clinic",
             "Type": "Hôpital",
-            "Adresse": " ",
+            "Adresse": "",
             "PlusCode": "8VP7+M7, Dowa, Malawi",
             "Source": "Google Maps",
             "Classe": "Établissement de santé"
@@ -207,7 +205,7 @@
             "FID": 10,
             "Nom": "HQ takenoLAB",
             "Type": "Établissement d'enseignement",
-            "Adresse": " ",
+            "Adresse": "",
             "PlusCode": "8VP7+MG, Dowa, Malawi",
             "Source": "Google Maps",
             "Classe": "Établissement d'enseignement"
@@ -222,42 +220,22 @@
           "properties": {
             "FID": 11,
             "Nom": "Discover Yourself Organization",
-            "Type": "Établissement d'enseignement: " ",
-            "PlusCode": "Null",
+            "Type": "Établissement d'enseignement",
+            "Adresse": "",
+            "PlusCode": "8VP7+QJ, Dowa, Malawi",
             "Source": "Google Maps",
             "Classe": "Établissement d'enseignement"
           },
           "geometry": {
             "type": "Point",
-            "coordinates": [33.87415, -13.659286]
+            "coordinates": [33.86993584834113, -13.665877338773276]
           }
-        },
-        {
-          "type": "Feature",
-          "properties": {
-            "FID": 12,
-            "Nom": "Super Sink Filling Station",
-            "Type": "Station-service: " ",
-            "PlusCode": "8VQ8+XR Mbalame, Malawi",
-            "Source": "Google Maps",
-            "Classe": "Station-service"
-          },
-          "geometry": {
-            "type": "Point",
-            "coordinates": [33.867024, -13.660027]
-          }
-        },
+        }
       ]
     };
 
     /* Add the GeoJSON layer to the map */
-    L.geoJSON(geojsonData, {
-      onEachFeature: function (feature, layer) {
-        if (feature.properties && feature.properties.Nom) {
-          layer.bindPopup("<b>" + feature.properties.Nom + "</b><br>" + feature.properties.Type + "<br>" + feature.properties.Adresse);
-        }
-      }
-    }).addTo(map);
+    L.geoJSON(geojsonData).addTo(map);
   </script>
 
 </body>
