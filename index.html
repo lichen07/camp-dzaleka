@@ -37,27 +37,72 @@
           <a href="https://carto.com/attribution">CARTO</a>'
     }).addTo(map);
 
-    /* Load and display the GeoJSON layer */
-    var geojsonUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/infrastructures-dzaleka.json';
-
-    // Fetch the GeoJSON data and add it to the map
-    fetch(geojsonUrl)
-      .then(response => response.json())
-      .then(data => {
-        L.geoJSON(data, {
-          onEachFeature: function (feature, layer) {
-            // Optionally bind popup to display the name or other properties
-            if (feature.properties && feature.properties.name) {
-              layer.bindPopup(feature.properties.name);
-            }
+    /* Define GeoJSON directly in the code */
+    var geojsonData = {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "FID": 0,
+            "Nom": "Dzaleka Refugee Camp, Kawale / 01",
+            "Type": "Restaurant",
+            "Adresse": "Dzaleka, M16, Malawi",
+            "PlusCode": "8VM9+PJ Mbalame, Malawi",
+            "Source": "Google Maps",
+            "Classe": "Centre de distribution alimentaire"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.86904900234, -13.665704346091083]
           }
-        }).addTo(map);
-      })
-      .catch(error => {
-        console.error('Error loading the GeoJSON data:', error);
-      });
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "FID": 1,
+            "Nom": "Zawadie Solutions",
+            "Type": "Organisme sans but lucratif",
+            "Adresse": " ",
+            "PlusCode": "8VP7+XR2, Dowa, Malawi",
+            "Source": "Google Maps",
+            "Classe": "OBNL"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.86451742386214, -13.662611256253625]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "FID": 2,
+            "Nom": "UPDG",
+            "Type": "Établissement d'enseignement",
+            "Adresse": "Dzaleka, M16, Malawi",
+            "PlusCode": "8VP8+9W Mbalame, Malawi",
+            "Source": "Google Maps",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.8672695008219, -13.664031722993474]
+          }
+        }
+        // Add the remaining points here following the same format
+        // Each point is a separate feature with its properties and geometry
+      ]
+    };
+
+    /* Add the GeoJSON layer to the map */
+    L.geoJSON(geojsonData, {
+      onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Nom) {
+          layer.bindPopup("<b>" + feature.properties.Nom + "</b><br>" + feature.properties.Type + "<br>" + feature.properties.Adresse);
+        }
+      }
+    }).addTo(map);
   </script>
+
 </body>
 </html>
-
-
