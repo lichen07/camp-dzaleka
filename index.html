@@ -537,9 +537,23 @@
         }
       ]
     };
-
-    /* Add the GeoJSON layer to the map */
-    L.geoJSON(geojsonData).addTo(map);
+    
+    /* Add markers with popups */
+    L.geoJSON(geojsonData, {
+      onEachFeature: function (feature, layer) {
+        // Create popup content
+        var popupContent = `
+          <b>Nom:</b> ${feature.properties.Nom} <br>
+          <b>Type:</b> ${feature.properties.Type} <br>
+          <b>Adresse:</b> ${feature.properties.Adresse} <br>
+          <b>PlusCode:</b> ${feature.properties.PlusCode} <br>
+          <b>Source:</b> ${feature.properties.Source} <br>
+          <b>Classe:</b> ${feature.properties.Classe}
+        `;
+        // Bind the popup to the marker
+        layer.bindPopup(popupContent);
+      }
+    }).addTo(map);
   </script>
 
 </body>
