@@ -1,11 +1,11 @@
-#Lien vers la carte web interactive
+#Lien vers la carte web interactive :
 https://lichen07.github.io/camp-dzaleka/
 
-#Source des icônes utilisées
-graduation-hat.png: https://www.flaticon.com/free-icon/graduation-hat_999735?term=school&page=1&position=5&origin=search&related_id=999735 
-restaurant.pmg: https://www.flaticon.com/free-icon/restaurant_685352?term=food&page=1&position=15&origin=search&related_id=685352
-humanitarian.png: https://www.flaticon.com/free-icon/humanitarian_4277003?term=humanitarian+aid&page=1&position=1&origin=search&related_id=4277003
-hospital.png: https://www.flaticon.com/free-icon/hospital_8145721?term=hospital&page=1&position=33&origin=search&related_id=8145721
-rec.png: https://www.flaticon.com/free-icon/rec_10024160?term=dot&page=1&position=71&origin=search&related_id=10024160
-gas-pump: https://www.flaticon.com/free-icon/gas-pump_891035?term=gas+station&page=1&position=3&origin=search&related_id=891035
-police-station.png: https://www.flaticon.com/free-icon/police-station_2088117?term=police+station&page=1&position=10&origin=search&related_id=2088117
+#Source des icônes utilisées (FLATICON.COM)
+ecoles.png : https://www.flaticon.com/free-icon/education_5193827?related_id=5193797&origin=search
+humanitarian-aid.png : https://www.flaticon.com/free-icon/humanitarian-aid_17787767?term=humanitarian&page=1&position=74&origin=search&related_id=17787767
+hospital.png : https://www.flaticon.com/free-icon/hospital_3448442?term=hospital&related_id=3448442
+restaurant.png : https://www.flaticon.com/free-icon/restaurant_685352?term=food&page=1&position=12&origin=search&related_id=685352
+gas-pump.png : https://www.flaticon.com/free-icon/gas-station_846347?term=gas&related_id=846347&origin=search
+localisation.png : https://www.flaticon.com/free-icon/location_1483285?term=marker&page=1&position=25&origin=search&related_id=1483285
+police.png : https://www.flaticon.com/free-icon/badge_274217?term=police&related_id=274217 
