@@ -68,19 +68,19 @@
     var layerControl = L.control.layers(basemaps).addTo(map);  
 
     
-      /* Définir la couleur du label-tooltip selon le fond de carte */
-    function updateTooltipStyle(layerName) {
-      var tooltips = document.querySelectorAll('.label-tooltip');
-      if (layerName === 'Voyager') or (layerName === 'OpenStreetMap HOT') {
-        tooltips.forEach(function(tooltip) {
-          tooltip.style.color = 'black';  // Noir pour voyager
-        });
-      } else if (layerName === 'Google Satellite') {
-        tooltips.forEach(function(tooltip) {
-          tooltip.style.color = 'white';  // Blanc pour Google Satellite
-        });
-      }
-    }
+/* Définir la couleur du label-tooltip selon le fond de carte */
+function updateTooltipStyle(layerName) {
+  var tooltips = document.querySelectorAll('.label-tooltip');
+  if (layerName === 'Voyager' || layerName === 'OpenStreetMap HOT') {
+    tooltips.forEach(function(tooltip) {
+      tooltip.style.color = 'black';  // Noir pour Voyager et OpenStreetMap HOT
+    });
+  } else if (layerName === 'Google Satellite') {
+    tooltips.forEach(function(tooltip) {
+      tooltip.style.color = 'white';  // Blanc pour Google Satellite
+    });
+  }
+}
 
     // Appliquer la couleur initiale du fond de carte
     updateTooltipStyle('Voyager');
