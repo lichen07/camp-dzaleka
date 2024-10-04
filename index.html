@@ -100,7 +100,7 @@ map.on('layeradd', function(e) {
     updateTooltipStyle('Voyager');
   } else if (e.layer === googlesatellitelayer) {
     updateTooltipStyle('Google Satellite');
-  } else if (e.layer === osmHotLayer) { // Assurez-vous que cette condition correspond à votre couche OSM HOT
+  } else if (e.layer === openstreetmap_HOT) { // Assurez-vous que cette condition correspond à votre couche OSM HOT
     updateTooltipStyle('OpenStreetMap HOT');
   }
 });
