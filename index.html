@@ -42,10 +42,14 @@
     });
 
     /* FOND DE CARTE */
+    var openstreetmap_HOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+	     maxZoom: 19,
+	     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a>, &copy;<a href="https://www.flaticon.com/">Flaticon</a>',
+      }).addTo(map);
     var voyagerlayer = L.tileLayer(
       'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://carto.com/attribution">CARTO</a>, &copy;<a href="https://www.flaticon.com/">Flaticon</a>'
-    }).addTo(map);
+    });
 
     var googlesatellitelayer = L.tileLayer(
       'https://{s}.googleapis.com/maps/vt?lyrs=s&x={x}&y={y}&z={z}&scale=2', {
@@ -53,16 +57,11 @@
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
     });
 
-    var openstreetmap_HOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-	     maxZoom: 19,
-	     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a>, &copy;<a href="https://www.flaticon.com/">Flaticon</a>',
-      });
-
     /* CHOIX DU FOND DE CARTE */ 
     var basemaps = {
+      "OpenStreetMap HOT": openstreetmap_HOT,
       "Voyager": voyagerlayer,
       "Google Satellite": googlesatellitelayer,
-      "OpenStreetMap HOT": openstreetmap_HOT,
     };  
     
     var layerControl = L.control.layers(basemaps).addTo(map);  
