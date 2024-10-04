@@ -53,10 +53,16 @@
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
     });
 
+    var openstreetmap_HOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+	     maxZoom: 19,
+	     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a>, &copy;<a href="https://www.flaticon.com/">Flaticon</a>',
+      });
+
     /* CHOIX DU FOND DE CARTE */ 
     var basemaps = {
       "Voyager": voyagerlayer,
       "Google Satellite": googlesatellitelayer,
+      "OpenStreetMap HOT": openstreetmap_HOT,
     };  
     
     var layerControl = L.control.layers(basemaps).addTo(map);  
