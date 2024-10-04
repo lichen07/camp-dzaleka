@@ -71,7 +71,7 @@
       /* Définir la couleur du label-tooltip selon le fond de carte */
     function updateTooltipStyle(layerName) {
       var tooltips = document.querySelectorAll('.label-tooltip');
-      if (layerName === 'Voyager') {
+      if (layerName === 'Voyager') or (layerName === 'OpenStreetMap HOT' {
         tooltips.forEach(function(tooltip) {
           tooltip.style.color = 'black';  // Noir pour voyager
         });
