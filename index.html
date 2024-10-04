@@ -76,25 +76,35 @@
 /* COULEUR DES ÉTIQUETTES SELON LE FOND DE CARTE */
 function updateTooltipStyle(layerName) {
   var tooltips = document.querySelectorAll('.label-tooltip');
+  
+  // Définir la couleur des étiquettes
+  var labelColor;
   if (layerName === 'Voyager' || layerName === 'OpenStreetMap HOT') {
-    tooltips.forEach(function(tooltip) {
-      tooltip.style.color = 'black';  
-    });
+    labelColor = 'black';  
   } else if (layerName === 'Google Satellite') {
-    tooltips.forEach(function(tooltip) {
-      tooltip.style.color = 'white'; 
-    });
+    labelColor = 'white'; 
   }
-}
-    updateTooltipStyle('Voyager');
 
-    map.on('layeradd', function(e) {
-      if (e.layer === voyagerlayer) {
-        updateTooltipStyle('Voyager');
-      } else if (e.layer === googlesatellitelayer) {
-        updateTooltipStyle('Google Satellite');
-      }
-    });
+  // Appliquer la couleur aux étiquettes
+  tooltips.forEach(function(tooltip) {
+    tooltip.style.color = labelColor;  
+  });
+}
+
+// Initialiser la couleur pour Voyager
+updateTooltipStyle('Voyager');
+
+// Écouter l'ajout de couches pour changer les étiquettes
+map.on('layeradd', function(e) {
+  if (e.layer === voyagerlayer) {
+    updateTooltipStyle('Voyager');
+  } else if (e.layer === googlesatellitelayer) {
+    updateTooltipStyle('Google Satellite');
+  } else if (e.layer === osmHotLayer) { // Assurez-vous que cette condition correspond à votre couche OSM HOT
+    updateTooltipStyle('OpenStreetMap HOT');
+  }
+});
+
 
     
     /* AJOUT DES INFRASTRUCTURES CLÉS DU CAMP */
