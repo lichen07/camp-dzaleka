@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css" integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" crossorigin="" />
   <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js" integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script>
 
+	
   <!-- POSITIONNEMENT DE LA CARTE (CSS) -->
   <style>
     body { margin:0; padding:0; }
@@ -29,9 +30,12 @@
 </head>
 <body>
 
-  <!-- MAP CONTAINER -->
+
+	
+  <!-- CONTENANT DE LA CARTE -->
   <div id="map"></div>
 
+	
   <!-- CENTRE DE LA CARTE ET ZOOM (.js) -->
   <script>
     /* Set up the initial map center and zoom level */
@@ -41,7 +45,8 @@
       scrollWheelZoom: false
     });
 
-    /* FOND DE CARTE */
+	  
+    /* FONDS DE CARTE */
     var openstreetmap_HOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
 	     maxZoom: 19,
 	     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a>, &copy;<a href="https://www.flaticon.com/">Flaticon</a>',
@@ -57,6 +62,7 @@
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
     });
 
+	  
     /* CHOIX DU FOND DE CARTE */ 
     var basemaps = {
       "OpenStreetMap HOT": openstreetmap_HOT,
@@ -67,24 +73,21 @@
     var layerControl = L.control.layers(basemaps).addTo(map);  
 
     
-/* Définir la couleur du label-tooltip selon le fond de carte */
+/* COULEUR DES ÉTIQUETTES SELON LE FOND DE CARTE */
 function updateTooltipStyle(layerName) {
   var tooltips = document.querySelectorAll('.label-tooltip');
   if (layerName === 'Voyager' || layerName === 'OpenStreetMap HOT') {
     tooltips.forEach(function(tooltip) {
-      tooltip.style.color = 'black';  // Noir pour Voyager et OpenStreetMap HOT
+      tooltip.style.color = 'black';  
     });
   } else if (layerName === 'Google Satellite') {
     tooltips.forEach(function(tooltip) {
-      tooltip.style.color = 'white';  // Blanc pour Google Satellite
+      tooltip.style.color = 'white'; 
     });
   }
 }
-
-    // Appliquer la couleur initiale du fond de carte
     updateTooltipStyle('Voyager');
 
-    /* Lorsque le fond de carte change, mettre à jour la couleur du tooltip */
     map.on('layeradd', function(e) {
       if (e.layer === voyagerlayer) {
         updateTooltipStyle('Voyager');
@@ -613,6 +616,7 @@ function updateTooltipStyle(layerName) {
       ]
     };
 
+	  
 
 /* SYMBOLOGIE EN FONCTION DE LA CLASSE */
 function getIcon(feature) {
@@ -644,6 +648,7 @@ function getIcon(feature) {
   });
 }
 
+	  
 // AJOUTER LES ÉTIQUETTES POUR CHAQUE ENTITÉ
 function onEachFeature(feature, layer) {
   if (feature.properties && feature.properties.Nom) {
@@ -667,13 +672,11 @@ L.geoJSON(geojsonData, {
     `;
     layer.bindPopup(popupContent);
     
-    // Ajouter également l'étiquette permanente pour chaque entité
     if (feature.properties && feature.properties.Nom) {
       layer.bindTooltip(feature.properties.Nom, { permanent: true, direction: "center", className: "label-tooltip" });
     }
   }
 }).addTo(map);
-
 
   </script>
 
