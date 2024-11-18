@@ -5,16 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="utf-8">
 
-  <!BIBLIOTHÈQUE LEAFLET: https://leafletjs.com/download.html -->
+  <!-- BIBLIOTHÈQUE LEAFLET: https://leafletjs.com/download.html -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css" integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" crossorigin="" />
   <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js" integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script>
 
-	
-  <!-- POSITIONNEMENT DE LA CARTE (CSS) -->
   <style>
     body { margin:0; padding:0; }
     #map { position: absolute; top:0; bottom:0; right:0; left:0; }
-        .label-tooltip {
+    .label-tooltip {
       background-color: transparent;
       border: none;
       font-family: "Arial", Times, serif;
@@ -25,88 +23,37 @@
       text-shadow: none;
       box-shadow: none;
     }
+    .toggle-labels-btn {
+      background-color: #fff;
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      z-index: 1000;
+      font-size: 14px;
+    }
   </style>
-  <head>
 </head>
 <body>
 
-
-	
-  <!-- CONTENANT DE LA CARTE -->
   <div id="map"></div>
 
-	
-  <!-- CENTRE DE LA CARTE ET ZOOM (.js) -->
   <script>
-    /* Set up the initial map center and zoom level */
     var map = L.map('map', {
       center: [-13.663053, 33.870444], 
       zoom: 18,
       scrollWheelZoom: false
     });
 
-	  
-    /* FONDS DE CARTE */
     var openstreetmap_HOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-	     maxZoom: 19,
-	     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a>, &copy;<a href="https://www.flaticon.com/">Flaticon</a>',
-      }).addTo(map);
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a>, &copy;<a href="https://www.flaticon.com/">Flaticon</a>',
+    }).addTo(map);
+
     var voyagerlayer = L.tileLayer(
       'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://carto.com/attribution">CARTO</a>, &copy;<a href="https://www.flaticon.com/">Flaticon</a>'
     });
 
-    var googlesatellitelayer = L.tileLayer(
-      'https://{s}.googleapis.com/maps/vt?lyrs=s&x={x}&y={y}&z={z}&scale=2', {
-        attribution: '&copy; <a href="https://www.google.com/maps">Google Maps</a>, &copy;<a href="https://www.flaticon.com/">Flaticon</a>',
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    });
-
-	  
-    /* CHOIX DU FOND DE CARTE */ 
-    var basemaps = {
-      "OpenStreetMap HOT": openstreetmap_HOT,
-      "Voyager": voyagerlayer,
-      "Google Satellite": googlesatellitelayer,
-    };  
-    
-    var layerControl = L.control.layers(basemaps).addTo(map);  
-
-    
-/* COULEUR DES ÉTIQUETTES SELON LE FOND DE CARTE */
-function updateTooltipStyle(layerName) {
-  var tooltips = document.querySelectorAll('.label-tooltip');
-  
-  // Définir la couleur des étiquettes
-  var labelColor;
-  if (layerName === 'Voyager' || layerName === 'OpenStreetMap HOT') {
-    labelColor = 'black';  
-  } else if (layerName === 'Google Satellite') {
-    labelColor = 'white'; 
-  }
-
-  // Appliquer la couleur aux étiquettes
-  tooltips.forEach(function(tooltip) {
-    tooltip.style.color = labelColor;  
-  });
-}
-
-// Initialiser la couleur pour Voyager
-updateTooltipStyle('Voyager');
-
-// Écouter l'ajout de couches pour changer les étiquettes
-map.on('layeradd', function(e) {
-  if (e.layer === voyagerlayer) {
-    updateTooltipStyle('Voyager');
-  } else if (e.layer === googlesatellitelayer) {
-    updateTooltipStyle('Google Satellite');
-  } else if (e.layer === openstreetmap_HOT) { // Assurez-vous que cette condition correspond à votre couche OSM HOT
-    updateTooltipStyle('OpenStreetMap HOT');
-  }
-});
-
-
-    
     /* AJOUT DES INFRASTRUCTURES CLÉS DU CAMP */
     var geojsonData = {
       "type": "FeatureCollection",
@@ -626,69 +573,70 @@ map.on('layeradd', function(e) {
       ]
     };
 
-	  
+    var labelsVisible = true;
 
-/* SYMBOLOGIE EN FONCTION DE LA CLASSE */
-function getIcon(feature) {
-  var classe = feature.properties.Classe;
-  var iconUrl = '';
-
-  // Define custom icons based on 'Classe'
-  if (classe === "Établissement d'enseignement") {
-    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/ecoles.png';
-  } else if (classe === "Centre de distribution alimentaire") {
-    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/restaurant.png';
-  } else if (classe === "OBNL") {
-    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/humanitarian-aid.png';
-  } else if (classe == "Établissement de santé") {
-    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/etablissements_sante.png';
-  } else if (classe == "LCC Dzaleka") {
-    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/localisation.png';
-  } else if (classe == "Station-service") {
-    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/gas-pump.png';
-  } else if (classe == "Station de police") {
-    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/police.png';
-  }
-
-  return L.icon({
-    iconUrl: iconUrl,
-    iconSize: [30, 30], 
-    iconAnchor: [16, 32],
-    popupAnchor: [0, -32]
-  });
-}
-
-	  
-// AJOUTER LES ÉTIQUETTES POUR CHAQUE ENTITÉ
-function onEachFeature(feature, layer) {
-  if (feature.properties && feature.properties.Nom) {
-    layer.bindPopup(feature.properties.Nom);
-    layer.bindTooltip(feature.properties.Nom, { permanent: true, direction: "center", className: "label-tooltip" });
-  }
-}
-
-/* AJOUT DES INFRASTRUCTURES SUR LA CARTE ET POP UP */
-L.geoJSON(geojsonData, {
-  pointToLayer: function (feature, latlng) {
-    return L.marker(latlng, { icon: getIcon(feature) });
-  },
-  onEachFeature: function (feature, layer) {
-    var popupContent = `
-      <b>Nom:</b> ${feature.properties.Nom} <br>
-      <b>Type:</b> ${feature.properties.Type} <br>
-      <b>Adresse:</b> ${feature.properties.Adresse} <br>
-      <b>PlusCode:</b> ${feature.properties.PlusCode} <br>
-      <b>Source:</b> ${feature.properties.Source} <br>
-    `;
-    layer.bindPopup(popupContent);
-    
-    if (feature.properties && feature.properties.Nom) {
-      layer.bindTooltip(feature.properties.Nom, { permanent: true, direction: "center", className: "label-tooltip" });
+    function toggleLabels() {
+      labelsVisible = !labelsVisible;
+      geojsonLayer.eachLayer(function(layer) {
+        if (labelsVisible) {
+          layer.bindTooltip(layer.feature.properties.Nom, { permanent: true, direction: "center", className: "label-tooltip" });
+        } else {
+          layer.unbindTooltip();
+        }
+      });
     }
-  }
-}).addTo(map);
+
+    var geojsonLayer = L.geoJSON(geojsonData, {
+      pointToLayer: function (feature, latlng) {
+        return L.marker(latlng);
+      },
+      onEachFeature: function (feature, layer) {
+        var popupContent = `
+          <b>Nom:</b> ${feature.properties.Nom} <br>
+          <b>Type:</b> ${feature.properties.Type} <br>
+          <b>Adresse:</b> ${feature.properties.Adresse} <br>
+          <b>PlusCode:</b> ${feature.properties.PlusCode} <br>
+          <b>Source:</b> ${feature.properties.Source} <br>
+        `;
+        layer.bindPopup(popupContent);
+        
+        if (labelsVisible) {
+          layer.bindTooltip(feature.properties.Nom, { permanent: true, direction: "center", className: "label-tooltip" });
+        }
+      }
+    }).addTo(map);
+
+    // Ajouter le bouton dans le panneau des couches
+    var labelsButton = {
+      "Toggle Labels": {
+        icon: '🔤',
+        callback: toggleLabels
+      }
+    };
+
+    // Ajouter le contrôle des couches avec l'option Toggle Labels
+    L.control.layers({
+      "OpenStreetMap HOT": openstreetmap_HOT,
+      "Voyager": voyagerlayer,
+    }, null, {
+      position: 'topright',
+      collapsed: false
+    }).addTo(map);
+
+    // Bouton Toggle Labels dans le panneau
+    var toggleLabelsControl = L.control({position: 'topright'});
+
+    toggleLabelsControl.onAdd = function (map) {
+      var div = L.DomUtil.create('div', 'toggle-labels-btn');
+      div.innerHTML = 'Toggle Labels';
+      div.onclick = toggleLabels;
+      return div;
+    };
+
+    toggleLabelsControl.addTo(map);
 
   </script>
 
 </body>
 </html>
+
