@@ -659,13 +659,6 @@ function getIcon(feature) {
 }
 
 	  
-// AJOUTER LES ÉTIQUETTES POUR CHAQUE ENTITÉ
-function onEachFeature(feature, layer) {
-  if (feature.properties && feature.properties.Nom) {
-    layer.bindPopup(feature.properties.Nom);
-    layer.bindTooltip(feature.properties.Nom, { permanent: true, direction: "center", className: "label-tooltip" });
-  }
-}
 
 /* AJOUT DES INFRASTRUCTURES SUR LA CARTE ET POP UP */
 L.geoJSON(geojsonData, {
