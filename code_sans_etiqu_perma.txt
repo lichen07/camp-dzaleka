@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Camp de Dzaleka</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+
+  <!BIBLIOTHÈQUE LEAFLET: https://leafletjs.com/download.html -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css" integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js" integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script>
+
+	
+  <!-- POSITIONNEMENT DE LA CARTE (CSS) -->
+  <style>
+    body { margin:0; padding:0; }
+    #map { position: absolute; top:0; bottom:0; right:0; left:0; }
+        .label-tooltip {
+      background-color: transparent;
+      border: none;
+      font-family: "Arial", Times, serif;
+      color: black;
+      font-weight: bold;
+      font-size: 11px;
+      padding: 0;
+      text-shadow: none;
+      box-shadow: none;
+    }
+  </style>
+  <head>
+</head>
+<body>
+
+
+	
+  <!-- CONTENANT DE LA CARTE -->
+  <div id="map"></div>
+
+	
+  <!-- CENTRE DE LA CARTE ET ZOOM (.js) -->
+  <script>
+    /* Set up the initial map center and zoom level */
+    var map = L.map('map', {
+      center: [-13.663053, 33.870444], 
+      zoom: 18,
+      scrollWheelZoom: false
+    });
+
+	  
+    /* FONDS DE CARTE */
+    var openstreetmap_HOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+	     maxZoom: 19,
+	     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a>, &copy;<a href="https://www.flaticon.com/">Flaticon</a>',
+      }).addTo(map);
+    var voyagerlayer = L.tileLayer(
+      'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://carto.com/attribution">CARTO</a>, &copy;<a href="https://www.flaticon.com/">Flaticon</a>'
+    });
+
+    var googlesatellitelayer = L.tileLayer(
+      'https://{s}.googleapis.com/maps/vt?lyrs=s&x={x}&y={y}&z={z}&scale=2', {
+        attribution: '&copy; <a href="https://www.google.com/maps">Google Maps</a>, &copy;<a href="https://www.flaticon.com/">Flaticon</a>',
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    });
+
+	  
+    /* CHOIX DU FOND DE CARTE */ 
+    var basemaps = {
+      "OpenStreetMap HOT": openstreetmap_HOT,
+      "Voyager": voyagerlayer,
+      "Google Satellite": googlesatellitelayer,
+    };  
+    
+    var layerControl = L.control.layers(basemaps).addTo(map);  
+
+    
+/* COULEUR DES ÉTIQUETTES SELON LE FOND DE CARTE */
+function updateTooltipStyle(layerName) {
+  var tooltips = document.querySelectorAll('.label-tooltip');
+  
+  // Définir la couleur des étiquettes
+  var labelColor;
+  if (layerName === 'Voyager' || layerName === 'OpenStreetMap HOT') {
+    labelColor = 'black';  
+  } else if (layerName === 'Google Satellite') {
+    labelColor = 'white'; 
+  }
+
+  // Appliquer la couleur aux étiquettes
+  tooltips.forEach(function(tooltip) {
+    tooltip.style.color = labelColor;  
+  });
+}
+
+// Initialiser la couleur pour Voyager
+updateTooltipStyle('Voyager');
+
+// Écouter l'ajout de couches pour changer les étiquettes
+map.on('layeradd', function(e) {
+  if (e.layer === voyagerlayer) {
+    updateTooltipStyle('Voyager');
+  } else if (e.layer === googlesatellitelayer) {
+    updateTooltipStyle('Google Satellite');
+  } else if (e.layer === openstreetmap_HOT) { // Assurez-vous que cette condition correspond à votre couche OSM HOT
+    updateTooltipStyle('OpenStreetMap HOT');
+  }
+});
+
+
+    
+    /* AJOUT DES INFRASTRUCTURES CLÉS DU CAMP */
+    var geojsonData = {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "FID": 0,
+            "Nom": "Dzaleka Refugee Camp, Kawale / 01",
+            "Type": "Restaurant",
+            "Adresse": "Dzaleka, M16, Malawi",
+            "PlusCode": "8VM9+PJ Mbalame, Malawi",
+            "Source": "Google Maps",
+            "Classe": "Centre de distribution alimentaire"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.86904900234, -13.665704346091083]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "FID": 1,
+            "Nom": "Zawadie Solutions",
+            "Type": "Organisme sans but lucratif",
+            "Adresse": "",
+            "PlusCode": "8VP7+XR2, Dowa, Malawi",
+            "Source": "Google Maps",
+            "Classe": "OBNL"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.86451742386214, -13.662611256253625]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "FID": 2,
+            "Nom": "UPDG",
+            "Type": "Établissement d'enseignement",
+            "Adresse": "Dzaleka, M16, Malawi",
+            "PlusCode": "8VP8+9W Mbalame, Malawi",
+            "Source": "Google Maps",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.8672695008219, -13.664031722993474]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "FID": 3,
+            "Nom": "Youth Congress for Development and Socio-Progress (YOCODESOP)",
+            "Type": "Association ou organisation",
+            "Adresse": "",
+            "PlusCode": "8VP7+XW, Dowa, Malawi",
+            "Source": "Google Maps",
+            "Classe": "OBNL"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.86784852196655, -13.664447989266588]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "FID": 4,
+            "Nom": "Vijana Africa",
+            "Type": "Organisme sans but lucratif",
+            "Adresse": "",
+            "PlusCode": "8VP8+HW, Dowa, Malawi",
+            "Source": "Google Maps",
+            "Classe": "OBNL"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.868127345888539, -13.665139294721257]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "FID": 5,
+            "Nom": "Dzaleka Police station",
+            "Type": "Bureau gouvernemental",
+            "Adresse": "",
+            "PlusCode": "8VP7+X9, Dowa, Malawi",
+            "Source": "Google Maps",
+            "Classe": "Station de police"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.868730857244927, -13.663764583673107]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "FID": 6,
+            "Nom": "LCC Dzaleka",
+            "Type": "Siège social",
+            "Adresse": "",
+            "PlusCode": "8VP7+VQ, Dowa, Malawi",
+            "Source": "Google Maps",
+            "Classe": "LCC Dzaleka"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.868553333317109, -13.664699017966793]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "FID": 7,
+            "Nom": "BloomBox",
+            "Type": "Centre d'information",
+            "Adresse": "",
+            "PlusCode": "8VP7+QJ, Dowa, Malawi",
+            "Source": "Google Maps",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.867246053423152, -13.662526019464517]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "FID": 8,
+            "Nom": "JWL Zaidi Center",
+            "Type": "Université",
+            "Adresse": "",
+            "PlusCode": "8VP8+9P, Dowa, Malawi",
+            "Source": "Google Maps",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.867325313114094, -13.661798707622189]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "FID": 9,
+            "Nom": "Dzaleka Clinic",
+            "Type": "Hôpital",
+            "Adresse": "",
+            "PlusCode": "8VP7+M7, Dowa, Malawi",
+            "Source": "Google Maps",
+            "Classe": "Établissement de santé"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.870248871845931, -13.66151921513819]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "FID": 10,
+            "Nom": "HQ takenoLAB",
+            "Type": "Établissement d'enseignement",
+            "Adresse": "",
+            "PlusCode": "8VP7+MG, Dowa, Malawi",
+            "Source": "Google Maps",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.872496690755717, -13.662287211455551]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "FID": 12,
+            "Nom": "Super Sink Filling Station",
+            "Type": "Station-service",
+            "Adresse": "M7, Malawi",
+            "PlusCode": "8VQ8+XR Mbalame, Malawi",
+            "Source": "Google Maps",
+            "Classe": "Station-service"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.867024, -13.660027]
+          }
+        },
+          {
+          "type": "Feature",
+          "properties": {
+            "FID": 13,
+            "Nom": "There is Hope Bible School",
+            "Type": "Établissement d'enseignement",
+            "Adresse": "",
+            "PlusCode": "8VR7+5FV, Dowa, Malawi",
+            "Source": "Google Maps",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.86702433,-13.659521]
+            }
+        },
+          {
+          "type": "Feature",
+          "properties": {
+            "FID": 14,
+            "Nom": "takenoLAB - Tech Hub & ICT Academy",
+            "Type": "Établissement d'enseignement",
+            "Adresse": "Dzaleka, Dowa, Malawi",
+            "PlusCode": "8VR8+RG Dowa, Malawi",
+            "Source": "Google Maps",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.866386, -13.657919]
+          }
+        },
+          {
+          "type": "Feature",
+          "properties": {
+            "FID": 15,
+            "Nom": "Fountain of Hope",
+            "Type": "Organisme sans but lucratif",
+            "Adresse": "",
+            "PlusCode": "8VV8+C23, Malawi",
+            "Source": "Google Maps",
+            "Classe": "OBNL"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.865026, -13.656494]
+          }
+        },
+          {
+          "type": "Feature",
+          "properties": {
+            "FID": 16,
+            "Nom": "Dzaleka CDSS (Dzaleka Community Day Secondary School)",
+            "Type": "Établissement d'enseignement",
+            "Adresse": "Dzaleka, M16, Malawi",
+            "PlusCode": "8VV9+9F Mbalame, Malawi",
+            "Source": "Google Maps",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.868689, -13.656607]
+          }
+        },
+          {
+          "type": "Feature",
+          "properties": {
+            "FID": 17,
+            "Nom": "DAPP Dowa TTC",
+            "Type": "Établissement d'enseignement",
+            "Adresse": "P/Bag 5, Dowa, Malawi",
+            "PlusCode": "8VX8+7F Dowa, Malawi",
+            "Source": "Google Maps",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.86617, -13.651826]
+          }
+        },
+          {
+          "type": "Feature",
+          "properties": {
+            "FID": 18,
+            "Nom": "Agape Love Charity Organization",
+            "Type": "Organisme sans but lucratif",
+            "Adresse": "Dzaleka, M16, Dowa, Malawi",
+            "PlusCode": "8VWC+53 Dowa, Malawi",
+            "Source": "Google Maps",
+            "Classe": "OBNL"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.870216, -13.654595]
+          }
+        },
+          {
+          "type": "Feature",
+          "properties": {
+            "FID": 19,
+            "Nom": "FRATERNIDADE SEM FRONTEIRAS - NAÇÃO UBUNTU",
+            "Type": "Établissement d'enseignement",
+            "Adresse": "",
+            "PlusCode": "9V2C+V3V, Malawi",
+            "Source": "Google Maps",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.870078, -13.647901]
+          }
+        },
+          {
+          "type": "Feature",
+          "properties": {
+            "FID": 11,
+            "Nom": "Discover Yourself Organization",
+            "Type": "Établissement d'enseignement",
+            "Adresse": "",
+            "PlusCode": "8VP7+QJ, Dowa, Malawi",
+            "Source": "Google Maps",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.86993584834113, -13.665877338773276]
+          }
+        },
+          {
+          "type": "Feature",
+          "properties": {
+            "FID": 20,
+            "Nom": "Hope Family Clinic",
+            "Type": "Hôpital",
+            "Adresse": "",
+            "PlusCode": "",
+            "Source": "OpenStreetMap",
+            "Classe": "Établissement de santé"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.870125, -13.669308]
+          }
+        },
+          {
+          "type": "Feature",
+          "properties": {
+            "FID": 21,
+            "Nom": "Integrity 2",
+            "Type": "Établissement d'enseignement",
+            "Adresse": "",
+            "PlusCode": "",
+            "Source": "OpenStreetMap",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.866236, -13.670671]
+          }
+        },
+          {
+          "type": "Feature",
+          "properties": {
+            "FID": 22,
+            "Nom": "Fountain of Hope School",
+            "Type": "Établissement d'enseignement",
+            "Adresse": "",
+            "PlusCode": "",
+            "Source": "OpenStreetMap",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.868732, -13.665848]
+          }
+        },
+          {
+          "type": "Feature",
+          "properties": {
+            "FID": 23,
+            "Nom": "Tailoring UDET",
+            "Type": "Établissement d'enseignement",
+            "Adresse": "",
+            "PlusCode": "",
+            "Source": "OpenStreetMap",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.869315, -13.66455]
+          }
+        },
+          {
+          "type": "Feature",
+          "properties": {
+            "FID": 24,
+            "Nom": "Mtendere Pre-Primary School",
+            "Type": "Établissement d'enseignement",
+            "Adresse": "",
+            "PlusCode": "",
+            "Source": "OpenStreetMap",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.868341, -13.66281]
+          }
+        },
+          {
+          "type": "Feature",
+          "properties": {
+            "FID": 25,
+            "Nom": "Kids Living With Disability",
+            "Type": "Clinique médicale",
+            "Adresse": "",
+            "PlusCode": "",
+            "Source": "OpenStreetMap",
+            "Classe": "Établissement de santé"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.869343, -13.662188]
+          }
+        },
+          {
+          "type": "Feature",
+          "properties": {
+            "FID": 26,
+            "Nom": "JRS Wash Team",
+            "Type": "Établissement d'enseignement",
+            "Adresse": "",
+            "PlusCode": "",
+            "Source": "OpenStreetMap",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.867543, -13.661598]
+          }
+        },
+          {
+          "type": "Feature",
+          "properties": {
+            "FID": 27,
+            "Nom": "JRS Nursery School",
+            "Type": "Établissement d'enseignement",
+            "Adresse": "",
+            "PlusCode": "",
+            "Source": "OpenStreetMap",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.867266, -13.661442]
+          }
+        },
+          {
+          "type": "Feature",
+          "properties": {
+            "FID": 28,
+            "Nom": "Adult Education JRS",
+            "Type": "Établissement d'enseignement",
+            "Adresse": "",
+            "PlusCode": "",
+            "Source": "OpenStreetMap",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.867712, -13.661246]
+          }
+        },
+          {
+          "type": "Feature",
+          "properties": {
+            "FID": 29,
+            "Nom": "Professional courses",
+            "Type": "Établissement d'enseignement",
+            "Adresse": "",
+            "PlusCode": "",
+            "Source": "OpenStreetMap",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.867501, -13.661177]
+          }
+        },
+          {
+          "type": "Feature",
+          "properties": {
+            "FID": 31,
+            "Nom": "El Rapha Kalombo Pvt Clinic",
+            "Type": "Établissement d'enseignement",
+            "Adresse": "",
+            "PlusCode": "",
+            "Source": "OpenStreetMap",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.868779, -13.6539600241]
+          }
+        },
+          {
+          "type": "Feature",
+          "properties": {
+            "FID": 30,
+            "Nom": "Umodzi katubza Primary School",
+            "Type": "Établissement d'enseignement",
+            "Adresse": "",
+            "PlusCode": "",
+            "Source": "OpenStreetMap",
+            "Classe": "Établissement d'enseignement"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [33.868513, -13.659479]
+          }
+        }
+      ]
+    };
+
+	  
+
+/* SYMBOLOGIE EN FONCTION DE LA CLASSE */
+function getIcon(feature) {
+  var classe = feature.properties.Classe;
+  var iconUrl = '';
+
+  // Define custom icons based on 'Classe'
+  if (classe === "Établissement d'enseignement") {
+    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/ecoles.png';
+  } else if (classe === "Centre de distribution alimentaire") {
+    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/restaurant.png';
+  } else if (classe === "OBNL") {
+    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/humanitarian-aid.png';
+  } else if (classe == "Établissement de santé") {
+    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/etablissements_sante.png';
+  } else if (classe == "LCC Dzaleka") {
+    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/localisation.png';
+  } else if (classe == "Station-service") {
+    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/gas-pump.png';
+  } else if (classe == "Station de police") {
+    iconUrl = 'https://raw.githubusercontent.com/lichen07/camp-dzaleka/refs/heads/main/police.png';
+  }
+
+  return L.icon({
+    iconUrl: iconUrl,
+    iconSize: [30, 30], 
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+}
+	  
+
+/* AJOUT DES INFRASTRUCTURES SUR LA CARTE ET POP UP */
+L.geoJSON(geojsonData, {
+  pointToLayer: function (feature, latlng) {
+    return L.marker(latlng, { icon: getIcon(feature) });
+  },
+  onEachFeature: function (feature, layer) {
+    var popupContent = `
+      <b>Nom:</b> ${feature.properties.Nom} <br>
+      <b>Type:</b> ${feature.properties.Type} <br>
+      <b>Adresse:</b> ${feature.properties.Adresse} <br>
+      <b>PlusCode:</b> ${feature.properties.PlusCode} <br>
+      <b>Source:</b> ${feature.properties.Source} <br>
+    `;
+    layer.bindPopup(popupContent);
+    
+
+  }
+}).addTo(map);
+
+  </script>
+
+</body>
+</html>
